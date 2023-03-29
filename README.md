@@ -4,24 +4,25 @@
 
 You should have already created a Google Cloud account, created an instance and built a database (yesterday), as well as installed MySQL Workbench and made a connection to the database you've created.. In this lesson we will practice querying data.
 
-* Open MySQL Workbench
+- Open MySQL Workbench
 
 ## Part 1 - Initialize data
 
 We'll use the same database as we did yesterday but this new initialization will delete or `DROP` our existing table of `users` and replace it with three new tables: `usersAddress`, `users`, & `usersContact`. To do this:
 
-* Make sure you've selected the "admin" database in MySQL Workbench
+- Make sure you've selected the "admin" database in MySQL Workbench
 
-* Create a new query tab
-  * Click the button on the top left that has a SQL file with a "plus" icon on it
+- Create a new query tab
 
-* Click the folder icon in your query tab to open a new file
+  - Click the button on the top left that has a SQL file with a "plus" icon on it
 
-* Select the "initialize.sql" script that lives in this repo (you've hopefully cloned it into your 311-JSDev folder or somewhere else)
+- Click the folder icon in your query tab to open a new file
 
-* Click the lightning bolt icon to run the query
+- Select the "initialize.sql" script that lives in this repo (you've hopefully cloned it into your 311-JSDev folder or somewhere else)
 
-* If you refresh your schemas you should see a "users", "usersContact" and "usersAddress" table
+- Click the lightning bolt icon to run the query
+
+- If you refresh your schemas you should see a "users", "usersContact" and "usersAddress" table
 
 ## Part 2 - Query data
 
@@ -29,29 +30,47 @@ We are going to run a couple SQL queries and put the answers in the "Query Respo
 
 1. Get a sum of all the user_ids from the `usersAddress` table grouped by state. Enter the values for the specific states below.
 
-2. Find the most popular area code in the `usersContact` table. 
-  * Hint: SUBSTR, GROUP BY
+2. Find the most popular area code in the `usersContact` table.
 
-3. Find the MIN first_name, the county, and a count of all users in that county for counties with more than 10 users. There will be four results. List the last one. 
-  * Hint: MIN, COUNT, JOIN, GROUP BY, HAVING
+- Hint: SUBSTR, GROUP BY
 
+3. Find the MIN first_name, the county, and a count of all users in that county for counties with more than 10 users. There will be four results. List the last one.
+
+- Hint: MIN, COUNT, JOIN, GROUP BY, HAVING
 
 ## Query Responses
 
-1. Sums
-  * AK:
-  * CT
-  * TX:
-  * WY:
+1. Sums:
 
-2.
-  * Area code:
+- AK:1422
+- CT: 999
+- TX:7908
+- WY: 1271
 
-3.
-  * first_name:
-  * county:
-  * county total:
+* CODE: SELECT SUM(user_id), state
+  FROM usersaddress
+  GROUP BY state;
 
+2.  - Area code: 973
+
+    <!-- Prettier keeps auto formatting Count(*) -->
+
+- SELECT SUBSTR(phone1, 1, 3) AS area_code, COUNT(\*) AS count
+  FROM userscontact
+  GROUP BY area_code
+  ORDER BY count DESC
+  LIMIT 3;
+
+3.  - first_name: Alaine
+    - county: Orange
+    - county total: 11
+
+    * SELECT MIN(first*name), county, COUNT(*)
+      FROM users
+      JOIN usersaddress ON users.id = usersaddress.user_id
+      GROUP BY county
+      HAVING COUNT(\*) > 10
+      ORDER BY COUNT(\*) DESC;
 
 ## Summary
 
